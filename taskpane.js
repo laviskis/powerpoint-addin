@@ -5,7 +5,6 @@
 
 /* global document, Office */
 
-import { base64Image } from "../../base64Image";
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
     
