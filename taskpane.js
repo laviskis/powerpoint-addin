@@ -8,6 +8,7 @@
 import { base64Image } from "../../base64Image";
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
+    
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("insert-image").onclick = () => clearMessage(insertImage);
@@ -180,4 +181,19 @@ async function tryCatch(callback) {
   } catch (error) {
     setMessage("Error: " + error.toString());
   }
+
+  function triggerDownload() {
+    console.log("Button clicked! Triggering download.");
+
+    const blob = new Blob(["This is a test file content"], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "SlideTestFile.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 }
