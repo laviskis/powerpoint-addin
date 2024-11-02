@@ -5,6 +5,39 @@
 
 /* global document, Office */
 
+function initializeApp() {
+    console.log("Initializing app...");
+    
+    const sideloadMsg = document.getElementById("sideload-msg");
+    const appBody = document.getElementById("app-body");
+
+    if (sideloadMsg && appBody) {
+        sideloadMsg.style.display = "none";
+        appBody.style.display = "flex";
+        console.log("App body displayed successfully.");
+    } else {
+        console.error("sideload-msg or app-body element not found in the DOM");
+    }
+}
+
+// Run the initialization code based on whether Office is ready
+Office.onReady((info) => {
+    console.log("Office.js library loaded");
+    if (info.host === Office.HostType.PowerPoint) {
+        console.log("PowerPoint environment detected");
+        initializeApp();
+    } else {
+        console.log("Office.js loaded but not in PowerPoint");
+    }
+});
+
+// Check if Office.js is not loaded (running in a regular browser)
+if (!window.Office) {
+    console.log("Office.js not detected. Running in a non-Office environment.");
+    initializeApp();
+}
+
+
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
     
