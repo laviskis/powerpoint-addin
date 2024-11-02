@@ -20,23 +20,6 @@ function initializeApp() {
     }
 }
 
-// Run the initialization code based on whether Office is ready
-Office.onReady((info) => {
-    console.log("Office.js library loaded");
-    if (info.host === Office.HostType.PowerPoint) {
-        console.log("PowerPoint environment detected");
-        initializeApp();
-    } else {
-        console.log("Office.js loaded but not in PowerPoint");
-    }
-});
-
-// Check if Office.js is not loaded (running in a regular browser)
-if (!window.Office) {
-    console.log("Office.js not detected. Running in a non-Office environment.");
-    initializeApp();
-}
-
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
