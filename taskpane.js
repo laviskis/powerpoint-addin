@@ -2,10 +2,18 @@
 
 Office.onReady((info) => {
     if (info.host === Office.HostType.PowerPoint) {
-        document.getElementById("saveSlideButton").onclick = saveSelectedSlides;
+        console.log("PowerPoint environment detected.");
+
+        // Add an event listener with a log for debugging
+        document.getElementById("saveSlideButton").onclick = () => {
+            console.log("Save button clicked");
+            saveSelectedSlides();
+        };
+
         initializeApp();
     }
 });
+
 
 function initializeApp() {
     const sideloadMsg = document.getElementById("sideload-msg");
@@ -19,6 +27,7 @@ function initializeApp() {
         console.error("sideload-msg or app-body element not found in the DOM");
     }
 }
+console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");
 
 async function saveSelectedSlides() {
     console.log("Save button clicked");
