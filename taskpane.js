@@ -30,13 +30,8 @@ function initializeApp() {
 console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");
 
 async function saveSelectedSlides() {
-    console.log("Save button clicked");
-    console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");
-
     try {
         const slideNumbersInput = document.getElementById("slideNumberInput").value;
-        console.log("Slide numbers input:", slideNumbersInput);
-
         const slideNumbers = slideNumbersInput
             .split(',')
             .map((num) => parseInt(num.trim()))
@@ -55,8 +50,6 @@ async function saveSelectedSlides() {
             await context.sync();
 
             const selectedSlides = slides.items.filter((slide, index) => slideNumbers.includes(index + 1));
-            console.log("Selected slides:", selectedSlides);
-
             if (selectedSlides.length === 0) {
                 alert("No valid slides found for the entered slide numbers.");
                 return;
@@ -67,8 +60,9 @@ async function saveSelectedSlides() {
 
             for (let slide of selectedSlides) {
                 let slideCopy = pptx.addSlide();
-                slideCopy.addText(`Slide ${slide.id}`, { x: 1, y: 1, fontSize: 18 });
-                console.log(`Added placeholder text for Slide ${slide.id}`);
+                // Adding the slide number or title as placeholder text
+                slideCopy.addText(`Placeholder for Slide ${slide.id}`, { x: 1, y: 1, fontSize: 18 });
+                console.log(`Added placeholder for Slide ${slide.id}`);
             }
 
             // Save the presentation as a .pptx file
