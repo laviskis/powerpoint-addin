@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PowerPoint Add-in</title>
     <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
@@ -19,20 +18,10 @@
             <h1>My PowerPoint Add-in</h1>
         </header>
         <section class="ms-welcome__main">
-            <button class="ms-Button" id="insert-image">Insert Image</button><br/><br/>
-            <button class="ms-Button" id="insert-text">Insert Text</button><br/><br/>
-            <button class="ms-Button" id="get-slide-metadata">Get Slide Metadata</button><br/><br/>
-            <button class="ms-Button" id="add-slides">Add Slides</button><br/><br/>
-            <button class="ms-Button" id="go-to-first-slide">Go to First Slide</button><br/><br/>
-            <button class="ms-Button" id="go-to-next-slide">Go to Next Slide</button><br/><br/>
-            <button class="ms-Button" id="go-to-previous-slide">Go to Previous Slide</button><br/><br/>
-            <button class="ms-Button" id="go-to-last-slide">Go to Last Slide</button><br/><br/>
-            <input type="text" id="slideNumberInput" placeholder="Enter slide number"><br/><br/>
-            <button id="saveSlideButton">Save Slide as New File</button><br/><br/>
-            <button class="ms-Button" id="do-something">Do</button><br/><br/>
-            
+            <input type="text" id="slideNumberInput" placeholder="Enter slide numbers (e.g., 1,3,5)" style="width: 80%; margin-top: 10px;">
+            <button id="saveSlideButton" class="ms-Button ms-Button--primary" style="margin-top: 10px;">Save Selected Slides as New File</button>
         </section>
-        <section id="display-msg">
+        <section id="display-msg" style="margin-top: 20px;">
             <h3>Message</h3>
             <div id="message"></div>
         </section>
