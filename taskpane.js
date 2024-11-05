@@ -1,9 +1,7 @@
-// Initialize the Office Add-in when PowerPoint is ready
 Office.onReady((info) => {
     if (info.host === Office.HostType.PowerPoint) {
         console.log("PowerPoint environment detected.");
         initializeApp();
-        // Bind the button to the function
         document.getElementById("createEmailButton").onclick = () => {
             console.log("Button clicked");
             createNewPresentationWithSelectedSlides();
@@ -13,7 +11,6 @@ Office.onReady((info) => {
     }
 });
 
-// Function to hide sideload message and show app body
 function initializeApp() {
     const sideloadMsg = document.getElementById("sideload-msg");
     const appBody = document.getElementById("app-body");
@@ -27,7 +24,6 @@ function initializeApp() {
     }
 }
 
-// Function to create a new presentation with selected slides
 async function createNewPresentationWithSelectedSlides() {
     console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");
 
@@ -71,7 +67,8 @@ async function createNewPresentationWithSelectedSlides() {
             // Save the new presentation as a .pptx file and trigger download
             pptx.writeFile({ fileName: "SelectedSlidesPresentation.pptx" }).then(() => {
                 console.log("Presentation created successfully.");
-                openOutlookWithAttachment();
+                alert("The presentation has been created and downloaded. Please open your email client and attach the downloaded file manually.");
+                openOutlookWithoutAttachment();
             });
         });
     } catch (error) {
@@ -79,15 +76,11 @@ async function createNewPresentationWithSelectedSlides() {
     }
 }
 
-// Function to open a new email in Outlook with a mailto link
-function openOutlookWithAttachment() {
+function openOutlookWithoutAttachment() {
     const subject = "Slides from PowerPoint Presentation";
     const body = "Please find the selected slides from the PowerPoint presentation attached.";
     const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
     // Open the default email client (e.g., Outlook) with a prefilled subject and body
     window.location.href = mailtoLink;
-
-    // Inform the user to attach the file manually
-    alert("A new email has been opened in your default email client. Please attach the downloaded .pptx file manually.");
 }
