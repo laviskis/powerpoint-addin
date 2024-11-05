@@ -1,15 +1,35 @@
+// Initialize the Office Add-in when PowerPoint is ready
 Office.onReady((info) => {
     if (info.host === Office.HostType.PowerPoint) {
         console.log("PowerPoint environment detected.");
+        initializeApp();
+        // Bind the button to the function
         document.getElementById("createEmailButton").onclick = () => {
             console.log("Button clicked");
             createNewPresentationWithSelectedSlides();
         };
+    } else {
+        console.error("This add-in is not running in PowerPoint.");
     }
 });
 
+// Function to hide sideload message and show app body
+function initializeApp() {
+    const sideloadMsg = document.getElementById("sideload-msg");
+    const appBody = document.getElementById("app-body");
+
+    if (sideloadMsg && appBody) {
+        sideloadMsg.style.display = "none";
+        appBody.style.display = "flex";
+        console.log("App body displayed successfully.");
+    } else {
+        console.error("sideload-msg or app-body element not found in the DOM");
+    }
+}
+
+// Function to create a new presentation with selected slides
 async function createNewPresentationWithSelectedSlides() {
-    console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");  // Check if PptxGenJS is loaded
+    console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");
 
     const slideNumbersInput = document.getElementById("slideNumberInput").value;
     const slideNumbers = slideNumbersInput
@@ -45,12 +65,13 @@ async function createNewPresentationWithSelectedSlides() {
             validSlideNumbers.forEach((slideNum) => {
                 let slideCopy = pptx.addSlide();
                 slideCopy.addText(`Placeholder for Slide #${slideNum}`, { x: 1, y: 1, fontSize: 18 });
+                console.log(`Added placeholder for Slide #${slideNum}`);
             });
 
             // Save the new presentation as a .pptx file and trigger download
-            pptx.writeFile({ fileName: "SelectedSlidesPresentation.pptx" }).then((filePath) => {
-                console.log("Presentation created successfully:", filePath);
-                openOutlookWithAttachment(); // Trigger Outlook email with attachment
+            pptx.writeFile({ fileName: "SelectedSlidesPresentation.pptx" }).then(() => {
+                console.log("Presentation created successfully.");
+                openOutlookWithAttachment();
             });
         });
     } catch (error) {
@@ -58,6 +79,7 @@ async function createNewPresentationWithSelectedSlides() {
     }
 }
 
+// Function to open a new email in Outlook with a mailto link
 function openOutlookWithAttachment() {
     const subject = "Slides from PowerPoint Presentation";
     const body = "Please find the selected slides from the PowerPoint presentation attached.";
