@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PowerPoint Add-in</title>
+    <!-- Office JavaScript API -->
     <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <!-- PptxGenJS library -->
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.7.1/dist/pptxgen.bundle.js"></script>
+    <!-- Taskpane JavaScript -->
     <script src="taskpane.js"></script>
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
 </head>
 <body class="ms-font-m ms-Fabric">
+    <!-- Sideload message displayed if add-in is not fully loaded -->
     <section id="sideload-msg">
         <h2>Please sideload your add-in to see app body.</h2>
     </section>
+    <!-- Main content of the add-in, hidden until initialized -->
     <main id="app-body" style="display: none;">
         <header class="ms-bgColor-neutralPrimary ms-font-xl ms-fontColor-white">
             <h1>v3</h1>
         </header>
         <section class="ms-welcome__main">
             <input type="text" id="slideNumberInput" placeholder="Enter slide numbers (e.g., 1,3,5)" style="width: 80%; margin-top: 10px;">
-            <button id="saveSlideButton" class="ms-Button ms-Button--primary" style="margin-top: 10px;">Filter Slides</button>
             <button id="createEmailButton" class="ms-Button ms-Button--primary" style="margin-top: 10px;">
-    Create Email with Selected Slides
-</button>
-
+                Create Email with Selected Slides
+            </button>
         </section>
         <section id="display-msg" style="margin-top: 20px;">
             <h3>Message</h3>
