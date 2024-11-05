@@ -1,25 +1,16 @@
 Office.onReady((info) => {
     if (info.host === Office.HostType.PowerPoint) {
         console.log("PowerPoint environment detected.");
-        document.getElementById("createEmailButton").onclick = createNewPresentationWithSelectedSlides;
-        initializeApp();
+        document.getElementById("createEmailButton").onclick = () => {
+            console.log("Button clicked");
+            createNewPresentationWithSelectedSlides();
+        };
     }
 });
 
-function initializeApp() {
-    const sideloadMsg = document.getElementById("sideload-msg");
-    const appBody = document.getElementById("app-body");
-
-    if (sideloadMsg && appBody) {
-        sideloadMsg.style.display = "none";
-        appBody.style.display = "flex";
-        console.log("App body displayed successfully.");
-    } else {
-        console.error("sideload-msg or app-body element not found in the DOM");
-    }
-}
-
 async function createNewPresentationWithSelectedSlides() {
+    console.log("PptxGenJS is available:", typeof PptxGenJS !== "undefined");  // Check if PptxGenJS is loaded
+
     const slideNumbersInput = document.getElementById("slideNumberInput").value;
     const slideNumbers = slideNumbersInput
         .split(',')
@@ -59,7 +50,7 @@ async function createNewPresentationWithSelectedSlides() {
             // Save the new presentation as a .pptx file and trigger download
             pptx.writeFile({ fileName: "SelectedSlidesPresentation.pptx" }).then((filePath) => {
                 console.log("Presentation created successfully:", filePath);
-                openOutlookWithAttachment(filePath); // Trigger Outlook email with attachment
+                openOutlookWithAttachment(); // Trigger Outlook email with attachment
             });
         });
     } catch (error) {
