@@ -19,19 +19,19 @@ function initializeApp() {
     }
 }
 
-async function filterSlidesInPresentation() {
+async function createNewPresentationWithSelectedSlides() {
+    const slideNumbersInput = document.getElementById("slideNumberInput").value;
+    const slideNumbers = slideNumbersInput
+        .split(',')
+        .map((num) => parseInt(num.trim()))
+        .filter((num) => !isNaN(num));
+
+    if (slideNumbers.length === 0) {
+        alert("Please enter valid slide numbers separated by commas.");
+        return;
+    }
+
     try {
-        const slideNumbersInput = document.getElementById("slideNumberInput").value;
-        const slideNumbers = slideNumbersInput
-            .split(',')
-            .map((num) => parseInt(num.trim()))
-            .filter((num) => !isNaN(num));
-
-        if (slideNumbers.length === 0) {
-            alert("Please enter valid slide numbers separated by commas.");
-            return;
-        }
-
         await PowerPoint.run(async (context) => {
             const presentation = context.presentation;
             const slides = presentation.slides;
@@ -40,34 +40,41 @@ async function filterSlidesInPresentation() {
             await context.sync();
 
             const totalSlides = slides.items.length;
-
-            // Validate slide numbers to be within range
             const validSlideNumbers = slideNumbers.filter(num => num > 0 && num <= totalSlides);
+
             if (validSlideNumbers.length === 0) {
                 alert("No valid slides found for the entered slide numbers.");
                 return;
             }
 
-            // Create a list of slide indices to delete (those not in the selected list)
-            const slidesToDelete = [];
-            for (let i = 0; i < totalSlides; i++) {
-                if (!validSlideNumbers.includes(i + 1)) {
-                    slidesToDelete.push(slides.items[i]);
-                }
-            }
+            // Initialize a new PptxGenJS presentation
+            let pptx = new PptxGenJS();
 
-            // Delete slides that are not in the selected list
-            slidesToDelete.forEach((slide) => {
-                slide.delete();
+            // Add each selected slide as a placeholder in the new presentation
+            validSlideNumbers.forEach((slideNum) => {
+                let slideCopy = pptx.addSlide();
+                slideCopy.addText(`Placeholder for Slide #${slideNum}`, { x: 1, y: 1, fontSize: 18 });
             });
 
-            await context.sync();
-
-            console.log("Unwanted slides removed successfully!");
-            alert("Unwanted slides have been removed from the presentation.");
+            // Save the new presentation as a .pptx file and trigger download
+            pptx.writeFile({ fileName: "SelectedSlidesPresentation.pptx" }).then((filePath) => {
+                console.log("Presentation created successfully:", filePath);
+                openOutlookWithAttachment(filePath); // Trigger Outlook email with attachment
+            });
         });
     } catch (error) {
-        console.error("Error filtering slides in the presentation:", error);
-        alert("An error occurred while filtering slides.");
+        console.error("Error creating presentation with selected slides:", error);
     }
+}
+
+function openOutlookWithAttachment() {
+    const subject = "Slides from PowerPoint Presentation";
+    const body = "Please find the selected slides from the PowerPoint presentation attached.";
+    const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Open the default email client (e.g., Outlook) with a prefilled subject and body
+    window.location.href = mailtoLink;
+
+    // Inform the user to attach the file manually
+    alert("A new email has been opened in your default email client. Please attach the downloaded .pptx file manually.");
 }
