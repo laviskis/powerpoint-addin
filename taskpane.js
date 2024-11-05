@@ -1,7 +1,7 @@
 Office.onReady((info) => {
     if (info.host === Office.HostType.PowerPoint) {
         console.log("PowerPoint environment detected.");
-        document.getElementById("saveSlideButton").onclick = duplicateAndTrimPresentation;
+        document.getElementById("saveSlideButton").onclick = filterSlidesInPresentation;
         initializeApp();
     }
 });
@@ -19,7 +19,7 @@ function initializeApp() {
     }
 }
 
-async function duplicateAndTrimPresentation() {
+async function filterSlidesInPresentation() {
     try {
         const slideNumbersInput = document.getElementById("slideNumberInput").value;
         const slideNumbers = slideNumbersInput
@@ -48,29 +48,26 @@ async function duplicateAndTrimPresentation() {
                 return;
             }
 
-            // Start with a copy of the entire presentation
-            let pptx = new PptxGenJS();
-            let copiedSlides = [];
-
-            // Create a new slide in PptxGenJS for each slide in the original presentation
+            // Create a list of slide indices to delete (those not in the selected list)
+            const slidesToDelete = [];
             for (let i = 0; i < totalSlides; i++) {
-                let slideCopy = pptx.addSlide();
-                slideCopy.addText(`Placeholder for Slide #${i + 1}`, { x: 1, y: 1, fontSize: 18 });
-                copiedSlides.push(slideCopy);
-            }
-
-            // Remove slides that are not in the list of selected slides
-            for (let i = 0; i < copiedSlides.length; i++) {
                 if (!validSlideNumbers.includes(i + 1)) {
-                    pptx.slides.splice(i, 1);
+                    slidesToDelete.push(slides.items[i]);
                 }
             }
 
-            // Save the trimmed presentation
-            pptx.writeFile({ fileName: "TrimmedPresentation.pptx" });
-            console.log("File saved successfully!");
+            // Delete slides that are not in the selected list
+            slidesToDelete.forEach((slide) => {
+                slide.delete();
+            });
+
+            await context.sync();
+
+            console.log("Unwanted slides removed successfully!");
+            alert("Unwanted slides have been removed from the presentation.");
         });
     } catch (error) {
-        console.error("Error duplicating and trimming presentation:", error);
+        console.error("Error filtering slides in the presentation:", error);
+        alert("An error occurred while filtering slides.");
     }
 }
