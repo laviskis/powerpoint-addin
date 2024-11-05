@@ -1,7 +1,7 @@
 Office.onReady((info) => {
     if (info.host === Office.HostType.PowerPoint) {
         console.log("PowerPoint environment detected.");
-        document.getElementById("saveSlideButton").onclick = filterSlidesInPresentation;
+        document.getElementById("saveSlideButton").onclick = createNewPresentationWithSelectedSlides;
         initializeApp();
     }
 });
